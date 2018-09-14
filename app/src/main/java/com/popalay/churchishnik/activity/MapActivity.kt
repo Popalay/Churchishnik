@@ -61,10 +61,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                 isRotateGesturesEnabled = true
                 isMyLocationButtonEnabled = true
             }
-            setOnMarkerClickListener {
+            setOnInfoWindowClickListener {
                 val index = it.tag as Int
                 startActivity(PointActivity.getIntent(this@MapActivity, index))
-                true
             }
         }
         listenPoints()
@@ -111,9 +110,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             val currentPoint = points[nextIndex]
             val options = MarkerOptions().apply {
+                title("Точка number $nextIndex")
+                snippet(currentPoint.description.take(20) + "...")
                 position(LatLng(currentPoint.location.latitude, currentPoint.location.longitude))
             }
             map.addMarker(options).apply { tag = currentPoint.index }
+            map.moveCamera(CameraUpdateFactory.newLatLng(options.position))
         }
     }
 
