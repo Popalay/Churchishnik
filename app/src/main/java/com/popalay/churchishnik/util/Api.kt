@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.popalay.churchishnik.model.Message
 import com.popalay.churchishnik.model.Point
 import kotlin.properties.Delegates
@@ -35,6 +36,7 @@ object Api {
 
     fun fetchMessages(onNext: (points: List<Message>) -> Unit) {
         FirebaseFirestore.getInstance().collection("messages")
+                .orderBy("createdAt", Query.Direction.DESCENDING)
                 .addSnapshotListener { snapshot, exception ->
                     snapshot?.toObjects(Message::class.java)?.run { onNext(this) }
                 }
@@ -42,6 +44,7 @@ object Api {
 
     fun fetchLastMessage(onNext: (point: Message) -> Unit) {
         FirebaseFirestore.getInstance().collection("messages")
+                .orderBy("createdAt", Query.Direction.DESCENDING)
                 .limit(1)
                 .addSnapshotListener { snapshot, _ -> snapshot?.toObjects(Message::class.java)?.lastOrNull()?.run { onNext(this) } }
     }

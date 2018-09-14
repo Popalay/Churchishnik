@@ -10,6 +10,7 @@ import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.OnLifecycleEvent
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -29,8 +30,8 @@ fun <V : View> DialogFragment.bindView(id: Int)
 fun <V : View> Fragment.bindView(id: Int)
     : ReadOnlyProperty<Fragment, V> = required(id, viewFinder)
 
-/*fun <V : View> RecyclerView.ViewHolder.bindView(id: Int)
-    : ReadOnlyProperty<RecyclerView.ViewHolder, V> = required(id, viewFinder)*/
+fun <V : View> RecyclerView.ViewHolder.bindView(id: Int)
+    : ReadOnlyProperty<RecyclerView.ViewHolder, V> = required(id, viewFinder)
 
 fun <V : View> View.bindOptionalView(id: Int)
     : ReadOnlyProperty<View, V?> = optional(id, viewFinder)
@@ -47,8 +48,8 @@ fun <V : View> DialogFragment.bindOptionalView(id: Int)
 fun <V : View> Fragment.bindOptionalView(id: Int)
     : ReadOnlyProperty<Fragment, V?> = optional(id, viewFinder)
 
-/*fun <V : View> RecyclerView.ViewHolder.bindOptionalView(id: Int)
-    : ReadOnlyProperty<RecyclerView.ViewHolder, V?> = optional(id, viewFinder)*/
+fun <V : View> RecyclerView.ViewHolder.bindOptionalView(id: Int)
+    : ReadOnlyProperty<RecyclerView.ViewHolder, V?> = optional(id, viewFinder)
 
 fun <V : View> View.bindViews(vararg ids: Int)
     : ReadOnlyProperty<View, List<V>> = required(ids, viewFinder)
@@ -65,8 +66,8 @@ fun <V : View> DialogFragment.bindViews(vararg ids: Int)
 fun <V : View> Fragment.bindViews(vararg ids: Int)
     : ReadOnlyProperty<Fragment, List<V>> = required(ids, viewFinder)
 
-/*fun <V : View> RecyclerView.ViewHolder.bindViews(vararg ids: Int)
-    : ReadOnlyProperty<RecyclerView.ViewHolder, List<V>> = required(ids, viewFinder)*/
+fun <V : View> RecyclerView.ViewHolder.bindViews(vararg ids: Int)
+    : ReadOnlyProperty<RecyclerView.ViewHolder, List<V>> = required(ids, viewFinder)
 
 fun <V : View> View.bindOptionalViews(vararg ids: Int)
     : ReadOnlyProperty<View, List<V>> = optional(ids, viewFinder)
@@ -83,8 +84,8 @@ fun <V : View> DialogFragment.bindOptionalViews(vararg ids: Int)
 fun <V : View> Fragment.bindOptionalViews(vararg ids: Int)
     : ReadOnlyProperty<Fragment, List<V>> = optional(ids, viewFinder)
 
-/*fun <V : View> RecyclerView.ViewHolder.bindOptionalViews(vararg ids: Int)
-    : ReadOnlyProperty<RecyclerView.ViewHolder, List<V>> = optional(ids, viewFinder)*/
+fun <V : View> RecyclerView.ViewHolder.bindOptionalViews(vararg ids: Int)
+    : ReadOnlyProperty<RecyclerView.ViewHolder, List<V>> = optional(ids, viewFinder)
 
 private val View.viewFinder: View.(Int) -> View?
     get() = { findViewById(it) }
@@ -96,8 +97,8 @@ private val DialogFragment.viewFinder: DialogFragment.(Int) -> View?
     get() = { dialog?.findViewById(it) ?: view!!.findViewById(it) }
 private val Fragment.viewFinder: Fragment.(Int) -> View?
     get() = { view!!.findViewById(it) }
-/*private val RecyclerView.ViewHolder.viewFinder: RecyclerView.ViewHolder.(Int) -> View?
-    get() = { itemView.findViewById(it) }*/
+private val RecyclerView.ViewHolder.viewFinder: RecyclerView.ViewHolder.(Int) -> View?
+    get() = { itemView.findViewById(it) }
 
 private fun viewNotFound(id: Int, desc: KProperty<*>): Nothing =
     throw IllegalStateException("View ID $id for '${desc.name}' not found.")

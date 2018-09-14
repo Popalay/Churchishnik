@@ -3,6 +3,7 @@ package com.popalay.churchishnik.activity
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
@@ -41,6 +42,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
         textLastMessage.movementMethod = ScrollingMovementMethod()
         listenLastMessage()
+        textLastMessage.setOnClickListener {
+            startActivity(Intent(this, ChatActivity::class.java))
+        }
     }
 
     override fun onResume() {

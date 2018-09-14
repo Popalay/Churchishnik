@@ -17,6 +17,10 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity
+            android:name=".activity.ChatActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".activity.PointActivity"
             android:screenOrientation="portrait" />
 
@@ -42,7 +46,6 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
-
     </application>
 
 </manifest>
