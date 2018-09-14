@@ -6,16 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".activity.PointActivity">
 
-    <ImageView
-        android:id="@+id/image"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager_images"
         android:layout_width="0dp"
         android:layout_height="200dp"
-        android:contentDescription="@null"
-        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@tools:sample/backgrounds/scenic" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.viewpagerindicator.CirclePageIndicator
+        android:id="@+id/pager_indicator"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:centered="true"
+        app:fillColor="@color/accent"
+        app:layout_constraintBottom_toBottomOf="@id/pager_images"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/text_description"
@@ -27,8 +35,23 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/image"
+        app:layout_constraintTop_toBottomOf="@id/pager_images"
         tools:text="@tools:sample/lorem/random" />
+
+    <EditText
+        android:id="@+id/input_answer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="#e7e7e7"
+        android:hint="Вводи сюдой"
+        android:inputType="text"
+        android:padding="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_answer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/button_answer"
@@ -37,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:text="Вводи ответ и го дальше"
+        android:text="Проверить глупый ответ"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

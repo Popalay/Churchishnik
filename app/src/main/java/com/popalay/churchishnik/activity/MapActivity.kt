@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.text.method.ScrollingMovementMethod
 import android.widget.TextView
@@ -28,7 +29,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     companion object {
 
         private const val PERMISSION_REQUEST_CODE = 121
-
     }
 
     private var map: GoogleMap by Delegates.notNull()
@@ -41,6 +41,11 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
         textLastMessage.movementMethod = ScrollingMovementMethod()
         listenLastMessage()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        listenPoints()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -96,17 +101,24 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun listenPoints() {
         Api.fetchPoints { points ->
             map.clear()
-            points.forEach {
-                val options = MarkerOptions().apply {
-                    position(LatLng(it.location.latitude, it.location.longitude))
-                }
-                map.addMarker(options).apply { tag = it.index }
+            val nextIndex = Api.getNextPoint()
+            if (nextIndex >= points.size) {
+                AlertDialog.Builder(this)
+                        .setTitle("ПОБЕДА!")
+                        .setMessage("Прошел по всем хуям! Прикатуй добухивать и внимать зеленого друга!")
+                        .show()
+                return@fetchPoints
             }
+            val currentPoint = points[nextIndex]
+            val options = MarkerOptions().apply {
+                position(LatLng(currentPoint.location.latitude, currentPoint.location.longitude))
+            }
+            map.addMarker(options).apply { tag = currentPoint.index }
         }
     }
 
     private fun listenLastMessage() {
-        Api.fetchLastMesssage { message ->
+        Api.fetchLastMessage { message ->
             textLastMessage.text = message.text
         }
     }

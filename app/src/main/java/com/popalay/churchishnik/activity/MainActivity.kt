@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import com.popalay.churchishnik.R
 import com.popalay.churchishnik.bindView
+import com.popalay.churchishnik.util.Api
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,6 +15,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        if (!Api.isFirsStart()) {
+            startActivity(Intent(this, MapActivity::class.java))
+            finish()
+        }
 
         buttonStart.setOnClickListener {
             startActivity(Intent(this, MapActivity::class.java))
