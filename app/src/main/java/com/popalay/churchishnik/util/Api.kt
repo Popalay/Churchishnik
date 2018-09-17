@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.Query
+import com.popalay.churchishnik.model.Location
 import com.popalay.churchishnik.model.Message
 import com.popalay.churchishnik.model.Point
 import kotlin.properties.Delegates
@@ -58,4 +60,12 @@ object Api {
     fun getNextPoint(): Int = getLastPoint() + 1
 
     fun isFirsStart() = getLastPoint() == -1
+
+    fun saveLastLocation(location: android.location.Location) {
+        FirebaseFirestore.getInstance()
+                .collection("locations")
+                .document("0")
+                .set(Location(GeoPoint(location.latitude, location.longitude)))
+                .addOnCompleteListener { }
+    }
 }

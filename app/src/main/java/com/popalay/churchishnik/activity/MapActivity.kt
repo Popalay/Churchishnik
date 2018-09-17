@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.popalay.churchishnik.R
 import com.popalay.churchishnik.bindView
 import com.popalay.churchishnik.util.Api
+import com.popalay.churchishnik.util.LocationListener
 import kotlin.properties.Delegates
 
 
@@ -33,6 +34,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private var map: GoogleMap by Delegates.notNull()
+    private var locationListener: LocationListener by Delegates.notNull()
     private val textLastMessage: TextView by bindView(R.id.text_last_message)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +42,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(R.layout.activity_map)
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+        locationListener = LocationListener(applicationContext)
         textLastMessage.movementMethod = ScrollingMovementMethod()
         listenLastMessage()
         textLastMessage.setOnClickListener {
@@ -49,7 +52,13 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onResume() {
         super.onResume()
+        locationListener.startLocationUpdates()
         listenPoints()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        locationListener.stopLocationUpdates()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -77,6 +86,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         when (requestCode) {
             PERMISSION_REQUEST_CODE -> if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 requestMyLocation(map)
+                locationListener.startLocationUpdates()
             } else {
                 Toast.makeText(this, "Ох и дурак, ну заходи теперь заново..", Toast.LENGTH_LONG).show()
             }
@@ -112,14 +122,15 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                         .show()
                 return@fetchPoints
             }
-            val currentPoint = points[nextIndex]
-            val options = MarkerOptions().apply {
-                title("Точка number $nextIndex")
-                snippet(currentPoint.description.take(20) + "...")
-                position(LatLng(currentPoint.location.latitude, currentPoint.location.longitude))
+            points.find { it.index == nextIndex }?.let { currentPoint ->
+                val options = MarkerOptions().apply {
+                    title("Точка number $nextIndex")
+                    snippet("Жми сюда, ало бля")
+                    position(LatLng(currentPoint.location.latitude, currentPoint.location.longitude))
+                }
+                map.addMarker(options).apply { tag = currentPoint.index }
+                map.moveCamera(CameraUpdateFactory.newLatLng(options.position))
             }
-            map.addMarker(options).apply { tag = currentPoint.index }
-            map.moveCamera(CameraUpdateFactory.newLatLng(options.position))
         }
     }
 
